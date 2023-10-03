@@ -1,0 +1,73 @@
+.registration-container {
+
+    margin: 200px;
+    width: 400px;
+    height: 380px;
+    border: 2px black solid;
+    border-radius: 5px;
+}
+
+.reg-name {
+
+    margin-top: 20px;
+    margin-left: 75px;
+    width: 220px;
+    height: 40px;
+    border: 1px solid black;
+    border-radius: 2px;
+}
+
+.reg-user {
+    margin-top: 20px;
+    margin-left: 40px;
+    width: 220px;
+    height: 40px;
+    border: 1px solid black;
+    border-radius: 2px;
+}
+
+.reg-pass {
+
+    margin-top: 20px;
+    margin-left: 43px;
+    width: 220px;
+    height: 40px;
+    border: 1px solid black;
+    border-radius: 2px;
+}
+
+.reg-email {
+
+    margin-top: 20px;
+    margin-left: 10px;
+    width: 220px;
+    height: 40px;
+    border: 1px solid black;
+    border-radius: 2px;
+}
+
+.reg-phn {
+
+    margin-top: 20px;
+    margin-left: 5px;
+    width: 220px;
+    height: 40px;
+    border: 1px solid black;
+    border-radius: 2px;
+}
+
+.reg-btn {
+    margin-top: 20px;
+    margin-left: 160px;
+    width: 90px;
+    height: 40px;
+    color: white;
+    font-size: 20px;
+    background-color: #00a884;
+}
+
+.reg-label {
+
+    margin-left: 20px;
+    color: black;
+}
