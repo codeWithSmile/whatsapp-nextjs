@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@fortawesome/free-regular-svg-icons": "^6.4.2",
+    "axios": "^1.5.1",
     "firebase": "^10.4.0",
     "next": "13.4.19",
     "react": "18.2.0",

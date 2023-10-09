@@ -3,7 +3,7 @@ import { FaSearch, FaPaperclip, FaEllipsisV } from 'react-icons/fa';
 import { MdMic } from 'react-icons/md'
 import { database, ref, push, set } from './firebase';
 import { onValue } from 'firebase/database';
-function chat() {
+function chat({ chatId }) {
     const [messages, setMessages] = useState('');
     const [chatMessages, setChatMessages] = useState([]);
     const handleChange = (e) => {
@@ -16,7 +16,7 @@ function chat() {
         }
 
         const chatRef = ref(database, 'chats'); // 'chats' is the name of your chat collection in Firebase
-        const newMessage = {
+        const chatMessages = {
             message: messages,
             timestamp: Date.now(),
             // Add other necessary fields like sender, receiver, etc.
@@ -26,30 +26,49 @@ function chat() {
         // setChatMessages([...chatMessages, newMessage]);
 
         // Push the new message to the Firebase Realtime Database
-        const newMessageRef = push(chatRef);
-        await set(newMessageRef, newMessage);
+        const chatMessagesRef = push(chatRef);
+        await set(chatMessagesRef, chatMessages);
 
 
         setMessages('');
     }
     useEffect(() => {
-        const chatRef = ref(database, 'chats'); // 'chats' is the name of your chat collection in Firebase
+        const chatRef = ref(database, `chats/${chatId}/messages`); // 'chats' is the name of your chat collection in Firebase
 
         const unsubscribe = onValue(chatRef, (snapshot) => {
             const data = snapshot.val();
-            if (data) {
+            if (data && typeof data === 'object') {
                 const messagesArray = Object.values(data);
                 setChatMessages(messagesArray);
+
             } else {
                 setChatMessages([]);
             }
+        }, (error) => {
+            // Handle error here
+            console.error("Error fetching chat messages: ", error);
+            setChatMessages([]); // Initialize chatMessages as an empty array when there is an error
+
         });
 
         return () => {
             // Unsubscribe from the chatRef when the component unmounts
             unsubscribe();
         };
-    }, []);
+    }, [chatId]);
+
+    // const handleSendMessage = () => {
+    //     // Push new message to the Firebase database
+    //     const chatRef = ref(database, `chats/${contactId}`);
+    //     const chatMessagesRef = push(chatRef);
+    //     const messageData = {
+    //         text: chatMessages,
+    //         timestamp: Date.now(),
+    //     };
+    //     set(chatMessagesRef, messageData);
+    //     setChatMessages('');
+    // };
+
 
     return (
         <div className='c-container'>
@@ -79,7 +98,17 @@ function chat() {
                                 {message.message}
                             </div>
                         ))}
+                        {/* <div className='input-container'> */}
+                        {/* <input
+                                type='text'
+                                placeholder='Type your message...'
+                                value={chatMessages}
+                                onChange={(e) => setChatMessages(e.target.value)}
+                            />
+                            <button onClick={handleSendMessage}>Send</button> */}
+                        {/* </div> */}
                     </div>
+
                     <div className='bottom'>
 
                         <FaPaperclip style={{ fontSize: '24px', margin: '10px', marginTop: '25px' }} />
