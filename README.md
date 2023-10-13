@@ -1,5 +1,24 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## Steps for Cloning:
+Open GitHub 
+
+Go to the Whatsapp-nextjs Reposiratory:
+
+Click on the button '<> Code' on right top
+
+Copy the URL [https://github.com/muskanDaruka/whatsapp-nextjs.git] for cloning the code to your system.
+
+Open Terminal :
+
+Type the following command :
+
+cd Desktop
+
+git clone [https://github.com/muskanDaruka/whatsapp-nextjs.git]
+
+Fill the following details : file name etc
+
 ## Getting Started
 
 First, run the development server:

@@ -1,61 +1,172 @@
 import React, { useState, useEffect } from 'react'
 import { FaSearch, FaPaperclip, FaEllipsisV } from 'react-icons/fa';
 import { MdMic } from 'react-icons/md'
-import { database, ref, push, set } from './firebase';
-import { onValue } from 'firebase/database';
-function chat({ chatId }) {
+import { database } from './firebase';
+import { firestore } from './firebase';
+import { collection, addDoc, onSnapshot } from 'firebase/firestore';
+import axios from 'axios';
+
+function chat({ contactId, contactName }) {
     const [messages, setMessages] = useState('');
-    const [chatMessages, setChatMessages] = useState([]);
+    const [messageHistory, setMessageHistory] = useState([]);
+    const [messageText, setMessageText] = useState('');
+    // const [chatMessages, setChatMessages] = useState([]);    
     const handleChange = (e) => {
-        setMessages(e.target.value);
+        setMessageText(e.target.value);
 
     }
     const handleClick = async () => {
-        if (messages.trim() === '') {
+        console.log('Clicked send button', messageText);
+        if (messageText.trim() === '') {
             return;
         }
+        try {
+            await addMessageToFirestore({
+                senderId: 'currentUserId', // Replace with the actual sender's ID
+                receiverId: contactId,
+                message: messageText,
+                timestamp: new Date(),
+            });
 
-        const chatRef = ref(database, 'chats'); // 'chats' is the name of your chat collection in Firebase
-        const chatMessages = {
-            message: messages,
-            timestamp: Date.now(),
-            // Add other necessary fields like sender, receiver, etc.
-        };
+            setMessageText('');
+        } catch (error) {
+            console.error('Error sending message:', error);
+        }
+    };
 
-        // Update the local state to show the message immediately
-        // setChatMessages([...chatMessages, newMessage]);
+    const addMessageToFirestore = async (messageData) => {
+        try {
+            const messagesRef = collection(firestore, 'messages');
+            await addDoc(messagesRef, messageData);
+            console.log('Message added successfully!');
+        } catch (error) {
+            console.error('Error adding message to Firestore:', error);
+            throw error; // Re-throw the error to handle it at a higher level if necessary
+        }
+    };
+    // const chatRef = ref(database, 'chats'); // 'chats' is the name of your chat collection in Firebase
+    // const chatMessages = {
+    //     message: messages,
+    //     timestamp: Date.now(),
+    // Add other necessary fields like sender, receiver, etc.
+    // try {
+    //     // Send the new message to your server using an API call
+    //     await axios.post('https://api.example.com/messages', {
+    //         sender: 'currentUserId', // Replace with the actual sender's ID or username
+    //         receiver: contactId,
+    //         message: messages,
+    //         timestamp: Date.now(),
+    //         // Add other necessary fields like sender, receiver, etc.
+    //     });
+    //     setMessageHistory(prevMessages => [
+    //         ...prevMessages, { sender: 'currentUserId', message: messages }]);
 
-        // Push the new message to the Firebase Realtime Database
-        const chatMessagesRef = push(chatRef);
-        await set(chatMessagesRef, chatMessages);
+    //     // Clear the input field after sending the message
+    //     setMessages('');
+    // } catch (error) {
+    //     console.error('Error sending message:', error);
+    // }
 
+    // Update the local state to show the message immediately
+    // setChatMessages([...chatMessages, newMessage]);
 
-        setMessages('');
-    }
-    useEffect(() => {
-        const chatRef = ref(database, `chats/${chatId}/messages`); // 'chats' is the name of your chat collection in Firebase
+    // Push the new message to the Firebase Realtime Database
+    //     const chatMessagesRef = push(chatRef);
+    //     await set(chatMessagesRef, chatMessages);
+    //     setMessages('');
+    // }
+    // useEffect(() => {
+    //     const messageListener = database.on('value', (snapshot) => {
+    //         const messagesData = snapshot.val(); // Retrieve all messages from the database
 
-        const unsubscribe = onValue(chatRef, (snapshot) => {
-            const data = snapshot.val();
-            if (data && typeof data === 'object') {
-                const messagesArray = Object.values(data);
-                setChatMessages(messagesArray);
+    //         if (messagesData) {
+    //             // Convert messages from object to array format for state
+    //             const messagesArray = Object.keys(messagesData).map((key) => ({
+    //                 id: key,
+    //                 sender: messagesData[key].sender,
+    //                 message: messagesData[key].message,
+    //                 timestamp: messagesData[key].timestamp,
+    //             }));
 
-            } else {
-                setChatMessages([]);
-            }
-        }, (error) => {
-            // Handle error here
-            console.error("Error fetching chat messages: ", error);
-            setChatMessages([]); // Initialize chatMessages as an empty array when there is an error
+    //             // Update the local state with the messages from the database
+    //             setMessageHistory(messagesArray);
+    //         }
+    //     });
 
-        });
+    //     // Clean up the listener when the component unmounts
+    //     return () => {
+    //         database.off('value', messageListener);
+    //     };
+    // }, []);
+    //     const intervalId = setInterval(() => {
+    //         // Simulating receiving new messages locally
+    //         const newMessage = {
+    //             sender: 'otherUserId', // Assuming this is the ID of the other user
+    //             message: 'New message received!', // Example message content
+    //         };
 
-        return () => {
-            // Unsubscribe from the chatRef when the component unmounts
-            unsubscribe();
-        };
-    }, [chatId]);
+    //         // Update messageHistory state with new messages
+    //         setMessageHistory(prevMessages => [...prevMessages, newMessage]);
+    //     }, 2000);
+
+    //     // Clean up the interval when the component unmounts
+    //     return () => {
+    //         clearInterval(intervalId);
+    //     };
+    // }, []);
+    //     const fetchMessages = async () => {
+    //         try {
+    //             const response = await axios.get(`https://api.example.com/messages/${contactId}`)
+    //             const receivedMessages = response.data.messages;
+    //             setMessageHistory([...messageHistory, ...receivedMessages]);
+
+    //         } catch (error) {
+    //             console.error('Error fetching chat messages:', error);
+    //         }
+    //     };
+
+    //     // Poll for new messages every 2 seconds (adjust the interval as needed)
+    //     const intervalId = setInterval(fetchMessages, 2000);
+
+    //     // Clean up the interval when the component unmounts
+    //     return () => {
+    //         clearInterval(intervalId);
+    //     };
+    // }, [contactId, messageHistory]);
+    //         .then(response => {
+    //             setMessages(response.data.messages);
+    //             setContactName(response.data.name);
+    //         })
+    //         .catch(error => {
+    //             console.error('Error fetching chat messages:', error);
+    //             setMessages([]);        // Initialize messages as an empty array when there is an error
+    //             setContactName(contactName);
+    //         });
+    // }, [contactId]);
+    // useEffect(() => {    
+    //     const chatRef = ref(database, `chats/${contactId}/messages`); // 'chats' is the name of your chat collection in Firebase
+
+    //     const unsubscribe = onValue(chatRef, (snapshot) => {
+    //         const data = snapshot.val();
+    //         if (data && typeof data === 'object') {
+    //             const messagesArray = Object.values(data);
+    //             setChatMessages(messagesArray);
+
+    //         } else {
+    //             setChatMessages([]);
+    //         }
+    //     }, (error) => {
+    //         // Handle error here
+    //         console.error("Error fetching chat messages: ", error);
+    //         setChatMessages([]); // Initialize chatMessages as an empty array when there is an error
+
+    //     });
+
+    //     return () => {
+    //         // Unsubscribe from the chatRef when the component unmounts
+    //         unsubscribe();
+    //     };
+    // }, [contactId]);
 
     // const handleSendMessage = () => {
     //     // Push new message to the Firebase database
@@ -67,8 +178,23 @@ function chat({ chatId }) {
     //     };
     //     set(chatMessagesRef, messageData);
     //     setChatMessages('');
-    // };
+    useEffect(() => {
+        const messagesCollection = collection(firestore, 'messages');
+        const unsubscribe = onSnapshot(messagesCollection, (snapshot) => {
+            try {
+                const messageData = [];
+                snapshot.forEach((doc) => {
+                    messageData.push({ id: doc.id, ...doc.data() });
+                });
+                setMessageHistory(messageData);
+            } catch (error) {
+                console.error('Error fetching messages:', error);
+                // Handle the error as appropriate, e.g., set an error state.
+            }
+        });
 
+        return () => unsubscribe();
+    }, [firestore, contactId]);
 
     return (
         <div className='c-container'>
@@ -77,8 +203,8 @@ function chat({ chatId }) {
                     <div>
                         <div className='top'>
                             <span className='flex'>
-                                <img src="./Images/musfinal1.jpg" className='img' />
-                                <pre>Muskan Daruka</pre>
+                                <img src={`https://picsum.photos/200/300?random=${Math.floor(Math.random() * 1000)}`} className='img' />
+                                <pre>{contactName}</pre>
                             </span>
                             <span className='icons'>
                                 <FaSearch style={{ fontSize: '20px', marginRight: '10px' }} />
@@ -88,25 +214,31 @@ function chat({ chatId }) {
                     </div>
 
                     <div className='middle'>
+                        {/* {Array.isArray(messages) &&
+                            messages.map((message, index) => (
+                                <div key={index} className='message'>
+                                    {message.text}
+                                </div>
+                            ))} */}
+                        <div className='chat-messages'>
+                            {messageHistory.map((message) => (
+                                <div key={message.id} className={`message ${message.sender === 'currentUserId' ? 'sent' : 'received'}`}>
+                                    {message.message}
+                                </div>
+                            ))}
+                        </div>
+
                         {/* {resultChat && (
                             <div className='result-chat'>
                                 You: {resultChat}
                             </div>
                         )} */}
-                        {chatMessages.map((message, index) => (
+                        {/* {chatMessages.map((message, index) => (
                             <div key={index} className='message'>
                                 {message.message}
                             </div>
-                        ))}
-                        {/* <div className='input-container'> */}
-                        {/* <input
-                                type='text'
-                                placeholder='Type your message...'
-                                value={chatMessages}
-                                onChange={(e) => setChatMessages(e.target.value)}
-                            />
-                            <button onClick={handleSendMessage}>Send</button> */}
-                        {/* </div> */}
+                        ))} */}
+
                     </div>
 
                     <div className='bottom'>
@@ -114,7 +246,7 @@ function chat({ chatId }) {
                         <FaPaperclip style={{ fontSize: '24px', margin: '10px', marginTop: '25px' }} />
                         <div className='bottom1'>
                             😀
-                            <input type='text' placeholder='Search or start new chat' className='input' value={messages} onChange={handleChange} />
+                            <input type='text' placeholder='Search or start new chat' className='input' value={messageText} onChange={handleChange} />
                             <button className='btn' onClick={handleClick}>Send</button>
                         </div>
                         <MdMic style={{ fontSize: '24px', margin: '10px', marginTop: '25px' }} />

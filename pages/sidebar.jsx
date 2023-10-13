@@ -5,7 +5,7 @@ import { FaEllipsisV, FaUsers, FaCommentDots, FaRegSmile, FaSearch } from 'react
 import { auth } from './firebase';
 import { database } from './firebase';
 import axios from 'axios';
-// import Chat from './chat';
+import Chat from './chat';
 
 function Sidebar() {
     const [contacts, setContacts] = useState([]);
@@ -22,8 +22,19 @@ function Sidebar() {
         contact.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
     const handleSearchClick = () => {
-        setSearchQuery(searchQuery);
-        setSearchQuery('');
+        if (searchQuery.trim() !== '') {
+            // Create a new contact object with the searched name
+            const newContact = {
+                id: Date.now(), // Use a unique identifier, such as a timestamp, as the contact ID
+                name: searchQuery,
+                // Add other properties if available in your data
+            };
+
+            // Update the contacts state by adding the new contact
+            setContacts(prevContacts => [...prevContacts, newContact]);
+
+            setSearchQuery('');
+        }
 
     }
     // const handleSearchClick = () => {
@@ -109,11 +120,11 @@ function Sidebar() {
 
                     <div className='bottom1'>
                         {/* <div className='flex'>
-                            <img src="./Images/musfinal1.jpg" className='img' />
-                            <p>Muskan</p>
+                            <img src={`https://picsum.photos/200/300?random=${Math.floor(Math.random() * 1000)}`} className='img' />
+                            <p></p>
                         </div>
-                        <hr />
-                        <div className='flexx'>
+                        <hr /> */}
+                        {/* <div className='flexx'>
                             <img src="./Images/Manavpic.jpeg" className='img' />
                             <p>Manav</p>
                         </div>
@@ -154,30 +165,39 @@ function Sidebar() {
                         {filteredContacts.map((contact) => (
                             <div
                                 key={contact.id}
-                                className={`contact ${selectedContact === contact.id ? 'selected' : ''}`}
+                                // <img src={`https://picsum.photos/200/300?random=${Math.floor(Math.random() * 1000)}`}/img>
+                                className={`contact flexx ${selectedContact === contact.id ? 'selected' : ''}`}
                                 onClick={() => handleContactClick(contact.id)}
                             >
-                                {contact.name}
+                                <img src={`https://picsum.photos/200/300?random=${contact.id}`} className='img' alt='Contact' />
+                                <p>{contact.name}</p>
                             </div>
                         ))}
+
                     </div>
                 </>
 
             </div>
             <span className='rightside'>
                 <div>
-                    <img src='./Images/sidebarright.jpeg' className='img1' />
-                    <h1 className='heading'>WhatsApp Web</h1>
-                    <p className='p1'>Send and receive messages without keeping your phone online <br />
-                        Use Whatsapp on up to 4 linked devices and 1 phone at the same time.
-                    </p>
-                    <p className='p2'>End-to-end encrypted</p>
+                    {selectedContact ? (
+                        <Chat contactId={selectedContact} contactName={filteredContacts.find((contact) => contact.id === selectedContact)?.name} />
+                    ) : (
+                        <>
+                            <img src='./Images/sidebarright.jpeg' className='img1' />
+                            <h1 className='heading'>WhatsApp Web</h1>
+                            <p className='p1'>Send and receive messages without keeping your phone online <br />
+                                Use Whatsapp on up to 4 linked devices and 1 phone at the same time.
+                            </p>
+                            <p className='p2'>End-to-end encrypted</p>
+                        </>
+                    )}
                 </div>
             </span>
         </div>
 
     );
-}
+};
 
 export default Sidebar;
 
