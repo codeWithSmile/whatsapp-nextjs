@@ -37,22 +37,7 @@ function Sidebar() {
         }
 
     }
-    // const handleSearchClick = () => {
-    //     if (user && user.uid && searchName.trim() !== '') {
-    //         const chatRef = ref(database, 'chats'); // 'chats' is the name of your chat collection in Firebase
-    //         const newMessageRef = push(chatRef);
-    //         const messageData = {
-    //             sender: user.uid, // Use the UID of the sender as the sender ID
-    //             receiver: 'receiver_user_uid', // Replace 'receiver_user_uid' with the UID of the receiver
-    //             message: searchName,
-    //             timestamp: Date.now(),
-    //             // Add other necessary fields like sender name, receiver name, etc.
-    //         };
 
-    //         set(newMessageRef, messageData);
-    //         setSearchName('');
-    //     }
-    // }
     const handleContactClick = (contactId) => {
         // Set the selected contact's unique identifier in the state
         setSelectedContact(contactId);
@@ -67,27 +52,7 @@ function Sidebar() {
                 console.error('Error fetching contacts:', error);
             });
     }, []);
-    // useEffect(() => {
-    //     if (user) {
-    //         const contactsRef = ref(database, 'contacts'); // 'contacts' is the name of your contacts collection in Firebase
 
-    //         const unsubscribe = onValue(contactsRef, (snapshot) => {
-    //             const data = snapshot.val();
-    //             if (data) {
-    //                 const contactsArray = Object.values(data);
-    //                 console.log('Contacts Array:', contactsArray);
-    //                 setContacts(contactsArray);
-    //             } else {
-    //                 setContacts([]);
-    //             }
-    //         });
-
-    //         return () => {
-    //             // Unsubscribe from the contactsRef when the component unmounts
-    //             unsubscribe();
-    //         };
-    //     }
-    // }, [user]);
     return (
 
         <div className='s-container'>
@@ -119,49 +84,7 @@ function Sidebar() {
                     </div>
 
                     <div className='bottom1'>
-                        {/* <div className='flex'>
-                            <img src={`https://picsum.photos/200/300?random=${Math.floor(Math.random() * 1000)}`} className='img' />
-                            <p></p>
-                        </div>
-                        <hr /> */}
-                        {/* <div className='flexx'>
-                            <img src="./Images/Manavpic.jpeg" className='img' />
-                            <p>Manav</p>
-                        </div>
-                        <hr />
-                        <div className='flexx'>
-                            <img src="./Images/Beautiful_View.jpeg" className='img' />
-                            <p>Mumma</p>
-                        </div>
-                        <hr />
-                        <div className='flexx'>
-                            <img src="./Images/Beautiful_View.jpeg" className='img' />
-                            <p >Papa</p>
-                        </div> */}
-                        {/* {contacts.map((contact, index) => (
-                            <div key={index} className='flexx'>
-                                <img src={contact.profilePicture} className='img' />
-                                <p>{contact.name}</p>
-                            </div>
-                        ))}
-                        <hr />
-                        {searchResult && (
-                            <div className='search-result'>
-                                Search Result: {searchResult}
-                            </div>
-                        )}
-                        <div className='contacts'>
-                            {contacts.map((contact) => (
-                                <div
-                                    key={contact.id}
-                                    className={`contact ${selectedContact === contact.id ? 'selected' : ''}`}
-                                    onClick={() => handleContactClick(contact.id)}
-                                >
-                                    {contact.name}
-                                </div>
-                            ))}
-                        </div>
-                        {selectedContact && <Chat contactId={selectedContact} />} */}
+
                         {filteredContacts.map((contact) => (
                             <div
                                 key={contact.id}
@@ -202,3 +125,207 @@ function Sidebar() {
 export default Sidebar;
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const handleSearchClick = () => {
+//     if (user && user.uid && searchName.trim() !== '') {
+//         const chatRef = ref(database, 'chats'); // 'chats' is the name of your chat collection in Firebase
+//         const newMessageRef = push(chatRef);
+//         const messageData = {
+//             sender: user.uid, // Use the UID of the sender as the sender ID
+//             receiver: 'receiver_user_uid', // Replace 'receiver_user_uid' with the UID of the receiver
+//             message: searchName,
+//             timestamp: Date.now(),
+//             // Add other necessary fields like sender name, receiver name, etc.
+//         };
+
+//         set(newMessageRef, messageData);
+//         setSearchName('');
+//     }
+// }
+// useEffect(() => {
+//     if (user) {
+//         const contactsRef = ref(database, 'contacts'); // 'contacts' is the name of your contacts collection in Firebase
+
+//         const unsubscribe = onValue(contactsRef, (snapshot) => {
+//             const data = snapshot.val();
+//             if (data) {
+//                 const contactsArray = Object.values(data);
+//                 console.log('Contacts Array:', contactsArray);
+//                 setContacts(contactsArray);
+//             } else {
+//                 setContacts([]);
+//             }
+//         });
+
+//         return () => {
+//             // Unsubscribe from the contactsRef when the component unmounts
+//             unsubscribe();
+//         };
+//     }
+// }, [user]);
+{/* <div className='flex'>
+                            <img src={`https://picsum.photos/200/300?random=${Math.floor(Math.random() * 1000)}`} className='img' />
+                            <p></p>
+                        </div>
+                        <hr /> */}
+{/* <div className='flexx'>
+                            <img src="./Images/Manavpic.jpeg" className='img' />
+                            <p>Manav</p>
+                        </div>
+                        <hr />
+                        <div className='flexx'>
+                            <img src="./Images/Beautiful_View.jpeg" className='img' />
+                            <p>Mumma</p>
+                        </div>
+                        <hr />
+                        <div className='flexx'>
+                            <img src="./Images/Beautiful_View.jpeg" className='img' />
+                            <p >Papa</p>
+                        </div> */}
+{/* {contacts.map((contact, index) => (
+                            <div key={index} className='flexx'>
+                                <img src={contact.profilePicture} className='img' />
+                                <p>{contact.name}</p>
+                            </div>
+                        ))}
+                        <hr />
+                        {searchResult && (
+                            <div className='search-result'>
+                                Search Result: {searchResult}
+                            </div>
+                        )}
+                        <div className='contacts'>
+                            {contacts.map((contact) => (
+                                <div
+                                    key={contact.id}
+                                    className={`contact ${selectedContact === contact.id ? 'selected' : ''}`}
+                                    onClick={() => handleContactClick(contact.id)}
+                                >
+                                    {contact.name}
+                                </div>
+                            ))}
+                        </div>
+                        {selectedContact && <Chat contactId={selectedContact} />} */}

@@ -44,140 +44,7 @@ function chat({ contactId, contactName }) {
             throw error; // Re-throw the error to handle it at a higher level if necessary
         }
     };
-    // const chatRef = ref(database, 'chats'); // 'chats' is the name of your chat collection in Firebase
-    // const chatMessages = {
-    //     message: messages,
-    //     timestamp: Date.now(),
-    // Add other necessary fields like sender, receiver, etc.
-    // try {
-    //     // Send the new message to your server using an API call
-    //     await axios.post('https://api.example.com/messages', {
-    //         sender: 'currentUserId', // Replace with the actual sender's ID or username
-    //         receiver: contactId,
-    //         message: messages,
-    //         timestamp: Date.now(),
-    //         // Add other necessary fields like sender, receiver, etc.
-    //     });
-    //     setMessageHistory(prevMessages => [
-    //         ...prevMessages, { sender: 'currentUserId', message: messages }]);
 
-    //     // Clear the input field after sending the message
-    //     setMessages('');
-    // } catch (error) {
-    //     console.error('Error sending message:', error);
-    // }
-
-    // Update the local state to show the message immediately
-    // setChatMessages([...chatMessages, newMessage]);
-
-    // Push the new message to the Firebase Realtime Database
-    //     const chatMessagesRef = push(chatRef);
-    //     await set(chatMessagesRef, chatMessages);
-    //     setMessages('');
-    // }
-    // useEffect(() => {
-    //     const messageListener = database.on('value', (snapshot) => {
-    //         const messagesData = snapshot.val(); // Retrieve all messages from the database
-
-    //         if (messagesData) {
-    //             // Convert messages from object to array format for state
-    //             const messagesArray = Object.keys(messagesData).map((key) => ({
-    //                 id: key,
-    //                 sender: messagesData[key].sender,
-    //                 message: messagesData[key].message,
-    //                 timestamp: messagesData[key].timestamp,
-    //             }));
-
-    //             // Update the local state with the messages from the database
-    //             setMessageHistory(messagesArray);
-    //         }
-    //     });
-
-    //     // Clean up the listener when the component unmounts
-    //     return () => {
-    //         database.off('value', messageListener);
-    //     };
-    // }, []);
-    //     const intervalId = setInterval(() => {
-    //         // Simulating receiving new messages locally
-    //         const newMessage = {
-    //             sender: 'otherUserId', // Assuming this is the ID of the other user
-    //             message: 'New message received!', // Example message content
-    //         };
-
-    //         // Update messageHistory state with new messages
-    //         setMessageHistory(prevMessages => [...prevMessages, newMessage]);
-    //     }, 2000);
-
-    //     // Clean up the interval when the component unmounts
-    //     return () => {
-    //         clearInterval(intervalId);
-    //     };
-    // }, []);
-    //     const fetchMessages = async () => {
-    //         try {
-    //             const response = await axios.get(`https://api.example.com/messages/${contactId}`)
-    //             const receivedMessages = response.data.messages;
-    //             setMessageHistory([...messageHistory, ...receivedMessages]);
-
-    //         } catch (error) {
-    //             console.error('Error fetching chat messages:', error);
-    //         }
-    //     };
-
-    //     // Poll for new messages every 2 seconds (adjust the interval as needed)
-    //     const intervalId = setInterval(fetchMessages, 2000);
-
-    //     // Clean up the interval when the component unmounts
-    //     return () => {
-    //         clearInterval(intervalId);
-    //     };
-    // }, [contactId, messageHistory]);
-    //         .then(response => {
-    //             setMessages(response.data.messages);
-    //             setContactName(response.data.name);
-    //         })
-    //         .catch(error => {
-    //             console.error('Error fetching chat messages:', error);
-    //             setMessages([]);        // Initialize messages as an empty array when there is an error
-    //             setContactName(contactName);
-    //         });
-    // }, [contactId]);
-    // useEffect(() => {    
-    //     const chatRef = ref(database, `chats/${contactId}/messages`); // 'chats' is the name of your chat collection in Firebase
-
-    //     const unsubscribe = onValue(chatRef, (snapshot) => {
-    //         const data = snapshot.val();
-    //         if (data && typeof data === 'object') {
-    //             const messagesArray = Object.values(data);
-    //             setChatMessages(messagesArray);
-
-    //         } else {
-    //             setChatMessages([]);
-    //         }
-    //     }, (error) => {
-    //         // Handle error here
-    //         console.error("Error fetching chat messages: ", error);
-    //         setChatMessages([]); // Initialize chatMessages as an empty array when there is an error
-
-    //     });
-
-    //     return () => {
-    //         // Unsubscribe from the chatRef when the component unmounts
-    //         unsubscribe();
-    //     };
-    // }, [contactId]);
-
-    // const handleSendMessage = () => {
-    //     // Push new message to the Firebase database
-    //     const chatRef = ref(database, `chats/${contactId}`);
-    //     const chatMessagesRef = push(chatRef);
-    //     const messageData = {
-    //         text: chatMessages,
-    //         timestamp: Date.now(),
-    //     };
-    //     set(chatMessagesRef, messageData);
-    //     setChatMessages('');
     useEffect(() => {
         const messagesCollection = collection(firestore, 'messages');
         const unsubscribe = onSnapshot(messagesCollection, (snapshot) => {
@@ -232,12 +99,7 @@ function chat({ contactId, contactName }) {
                             <div className='result-chat'>
                                 You: {resultChat}
                             </div>
-                        )} */}
-                        {/* {chatMessages.map((message, index) => (
-                            <div key={index} className='message'>
-                                {message.message}
-                            </div>
-                        ))} */}
+                        */}
 
                     </div>
 
@@ -260,3 +122,491 @@ function chat({ contactId, contactName }) {
 
 export default chat
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const chatRef = ref(database, 'chats'); // 'chats' is the name of your chat collection in Firebase
+// const chatMessages = {
+//     message: messages,
+//     timestamp: Date.now(),
+// Add other necessary fields like sender, receiver, etc.
+// try {
+//     // Send the new message to your server using an API call
+//     await axios.post('https://api.example.com/messages', {
+//         sender: 'currentUserId', // Replace with the actual sender's ID or username
+//         receiver: contactId,
+//         message: messages,
+//         timestamp: Date.now(),
+//         // Add other necessary fields like sender, receiver, etc.
+//     });
+//     setMessageHistory(prevMessages => [
+//         ...prevMessages, { sender: 'currentUserId', message: messages }]);
+
+//     // Clear the input field after sending the message
+//     setMessages('');
+// } catch (error) {
+//     console.error('Error sending message:', error);
+// }
+
+// Update the local state to show the message immediately
+// setChatMessages([...chatMessages, newMessage]);
+
+// Push the new message to the Firebase Realtime Database
+//     const chatMessagesRef = push(chatRef);
+//     await set(chatMessagesRef, chatMessages);
+//     setMessages('');
+// }
+// useEffect(() => {
+//     const messageListener = database.on('value', (snapshot) => {
+//         const messagesData = snapshot.val(); // Retrieve all messages from the database
+
+//         if (messagesData) {
+//             // Convert messages from object to array format for state
+//             const messagesArray = Object.keys(messagesData).map((key) => ({
+//                 id: key,
+//                 sender: messagesData[key].sender,
+//                 message: messagesData[key].message,
+//                 timestamp: messagesData[key].timestamp,
+//             }));
+
+//             // Update the local state with the messages from the database
+//             setMessageHistory(messagesArray);
+//         }
+//     });
+
+//     // Clean up the listener when the component unmounts
+//     return () => {
+//         database.off('value', messageListener);
+//     };
+// }, []);
+//     const intervalId = setInterval(() => {
+//         // Simulating receiving new messages locally
+//         const newMessage = {
+//             sender: 'otherUserId', // Assuming this is the ID of the other user
+//             message: 'New message received!', // Example message content
+//         };
+
+//         // Update messageHistory state with new messages
+//         setMessageHistory(prevMessages => [...prevMessages, newMessage]);
+//     }, 2000);
+
+//     // Clean up the interval when the component unmounts
+//     return () => {
+//         clearInterval(intervalId);
+//     };
+// }, []);
+//     const fetchMessages = async () => {
+//         try {
+//             const response = await axios.get(`https://api.example.com/messages/${contactId}`)
+//             const receivedMessages = response.data.messages;
+//             setMessageHistory([...messageHistory, ...receivedMessages]);
+
+//         } catch (error) {
+//             console.error('Error fetching chat messages:', error);
+//         }
+//     };
+
+//     // Poll for new messages every 2 seconds (adjust the interval as needed)
+//     const intervalId = setInterval(fetchMessages, 2000);
+
+//     // Clean up the interval when the component unmounts
+//     return () => {
+//         clearInterval(intervalId);
+//     };
+// }, [contactId, messageHistory]);
+//         .then(response => {
+//             setMessages(response.data.messages);
+//             setContactName(response.data.name);
+//         })
+//         .catch(error => {
+//             console.error('Error fetching chat messages:', error);
+//             setMessages([]);        // Initialize messages as an empty array when there is an error
+//             setContactName(contactName);
+//         });
+// }, [contactId]);
+// useEffect(() => {
+//     const chatRef = ref(database, `chats/${contactId}/messages`); // 'chats' is the name of your chat collection in Firebase
+
+//     const unsubscribe = onValue(chatRef, (snapshot) => {
+//         const data = snapshot.val();
+//         if (data && typeof data === 'object') {
+//             const messagesArray = Object.values(data);
+//             setChatMessages(messagesArray);
+
+//         } else {
+//             setChatMessages([]);
+//         }
+//     }, (error) => {
+//         // Handle error here
+//         console.error("Error fetching chat messages: ", error);
+//         setChatMessages([]); // Initialize chatMessages as an empty array when there is an error
+
+//     });
+
+//     return () => {
+//         // Unsubscribe from the chatRef when the component unmounts
+//         unsubscribe();
+//     };
+// }, [contactId]);
+
+// const handleSendMessage = () => {
+//     // Push new message to the Firebase database
+//     const chatRef = ref(database, `chats/${contactId}`);
+//     const chatMessagesRef = push(chatRef);
+//     const messageData = {
+//         text: chatMessages,
+//         timestamp: Date.now(),
+//     };
+//     set(chatMessagesRef, messageData);
+//     setChatMessages('');
