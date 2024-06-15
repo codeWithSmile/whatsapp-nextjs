@@ -1,67 +1,111 @@
 import React, { useState, useEffect } from 'react'
 import { FaSearch, FaPaperclip, FaEllipsisV } from 'react-icons/fa';
 import { MdMic } from 'react-icons/md'
-import { database } from './firebase';
-import { firestore } from './firebase';
-import { collection, addDoc, onSnapshot } from 'firebase/firestore';
-import axios from 'axios';
+import { firestore, auth } from './firebase';
+import { useRef } from 'react';
+import chatMessage from './chatMessage';
 
-function chat({ contactId, contactName }) {
-    const [messages, setMessages] = useState('');
-    const [messageHistory, setMessageHistory] = useState([]);
-    const [messageText, setMessageText] = useState('');
-    // const [chatMessages, setChatMessages] = useState([]);    
-    const handleChange = (e) => {
-        setMessageText(e.target.value);
 
-    }
-    const handleClick = async () => {
-        console.log('Clicked send button', messageText);
-        if (messageText.trim() === '') {
-            return;
-        }
-        try {
-            await addMessageToFirestore({
-                senderId: 'currentUserId', // Replace with the actual sender's ID
-                receiverId: contactId,
-                message: messageText,
-                timestamp: new Date(),
-            });
 
-            setMessageText('');
-        } catch (error) {
-            console.error('Error sending message:', error);
-        }
-    };
+function chat({ contactName }) {
 
-    const addMessageToFirestore = async (messageData) => {
-        try {
-            const messagesRef = collection(firestore, 'messages');
-            await addDoc(messagesRef, messageData);
-            console.log('Message added successfully!');
-        } catch (error) {
-            console.error('Error adding message to Firestore:', error);
-            throw error; // Re-throw the error to handle it at a higher level if necessary
-        }
-    };
+    // const [messages, setMessages] = useState('');
+    // const [messageHistory, setMessageHistory] = useState([]);
+    // const [messageText, setMessageText] = useState('');
+    // // const [chatMessages, setChatMessages] = useState([]);    
+    // const handleChange = (e) => {
+    //     setMessageText(e.target.value);
+
+    // }
+    // const handleClick = async () => {
+    //     console.log('Clicked send button', messageText);
+    //     if (messageText.trim() === '') {
+    //         return;
+    //     }
+    //     try {
+    //         await addMessageToFirestore({
+    //             senderId: 'currentUserId', // Replace with the actual sender's ID
+    //             receiverId: contactId,
+    //             message: messageText,
+    //             timestamp: new Date(),
+    //         });
+
+    //         setMessageText('');
+    //     } catch (error) {
+    //         console.error('Error sending message:', error);
+    //     }
+    // };
+
+    // const addMessageToFirestore = async (messageData) => {
+    //     try {
+    //         const messagesRef = collection(firestore, 'messages');
+    //         await addDoc(messagesRef, messageData);
+    //         console.log('Message added successfully!');
+    //     } catch (error) {
+    //         console.error('Error adding message to Firestore:', error);
+    //         throw error; // Re-throw the error to handle it at a higher level if necessary
+    //     }
+    // };
+
+    // useEffect(() => {
+    //     const messagesCollection = collection(firestore, 'messages');
+    //     const unsubscribe = onSnapshot(messagesCollection, (snapshot) => {
+    //         try {
+    //             const messageData = [];
+    //             snapshot.forEach((doc) => {
+    //                 messageData.push({ id: doc.id, ...doc.data() });
+    //             });
+    //             setMessageHistory(messageData);
+    //         } catch (error) {
+    //             console.error('Error fetching messages:', error);
+    //             // Handle the error as appropriate, e.g., set an error state.
+    //         }
+    //     });
+
+    //     return () => unsubscribe();
+    // }, [firestore, contactId]);
+
+
+
+
+    const [messages, setMessages] = useState([]);
+    const [newMessage, setNewMessage] = useState('');
+    const messagesEndRef = useRef(null);
 
     useEffect(() => {
-        const messagesCollection = collection(firestore, 'messages');
-        const unsubscribe = onSnapshot(messagesCollection, (snapshot) => {
-            try {
-                const messageData = [];
-                snapshot.forEach((doc) => {
-                    messageData.push({ id: doc.id, ...doc.data() });
-                });
-                setMessageHistory(messageData);
-            } catch (error) {
-                console.error('Error fetching messages:', error);
-                // Handle the error as appropriate, e.g., set an error state.
-            }
+        // Subscribe to messages collection in Firestore
+        const unsubscribe = firestore.collection('messages')
+            .orderBy('createdAt')
+            .limit(100)
+            .onSnapshot(querySnapshot => {
+                const data = querySnapshot.docs.map(doc => ({
+                    ...doc.data(),
+                    id: doc.id,
+                }));
+                setMessages(data);
+                scrollToBottom();
+            });
+
+        // Unsubscribe from the collection when component unmounts
+        return () => unsubscribe();
+    }, []);
+    const scrollToBottom = () => {
+        messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    };
+    const sendMessage = async (e) => {
+        e.preventDefault();
+        const { uid, photoURL } = auth.currentUser;
+
+        // Add a new message to Firestore
+        await firestore.collection('messages').add({
+            text: newMessage,
+            createdAt: new Date(),
+            uid,
+            photoURL,
         });
 
-        return () => unsubscribe();
-    }, [firestore, contactId]);
+        setNewMessage('');
+    }
 
     return (
         <div className='c-container'>
@@ -87,15 +131,12 @@ function chat({ contactId, contactName }) {
                                     {message.text}
                                 </div>
                             ))} */}
-                        <div className='chat-messages'>
-                            {messageHistory.map((message) => (
-                                <div key={message.id} className={`message ${message.sender === 'currentUserId' ? 'sent' : 'received'}`}>
-                                    {message.message}
-                                </div>
-                            ))}
-                        </div>
+                        {messages.map((message) => (
+                            <chatMessage key={message.id} message={message} />
+                        ))}
+                        <div ref={messagesEndRef} />
 
-                        {/* {resultChat && (
+                        {/* {resultChat && (    
                             <div className='result-chat'>
                                 You: {resultChat}
                             </div>
@@ -107,9 +148,10 @@ function chat({ contactId, contactName }) {
 
                         <FaPaperclip style={{ fontSize: '24px', margin: '10px', marginTop: '25px' }} />
                         <div className='bottom1'>
-                            😀
-                            <input type='text' placeholder='Search or start new chat' className='input' value={messageText} onChange={handleChange} />
-                            <button className='btn' onClick={handleClick}>Send</button>
+                            <form onSubmit={sendMessage}>
+                                <input type='text' placeholder='Type your message...' className='input' value={newMessage} onChange={(e) => setNewMessage(e.target.value)} />
+                                <button className='btn'>Send</button>
+                            </form>
                         </div>
                         <MdMic style={{ fontSize: '24px', margin: '10px', marginTop: '25px' }} />
 

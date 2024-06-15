@@ -1,9 +1,8 @@
 
-import { initializeApp } from "firebase/app";
-// import { getAnalytics } from "firebase/analytics";
-import { getAuth } from "firebase/auth";
-import { getDatabase } from 'firebase/database';
-import { getFirestore } from 'firebase/firestore';
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import 'firebase/firestore';
+import { getMessaging, getToken } from "firebase/messaging";
 
 
 const firebaseConfig = {
@@ -15,10 +14,19 @@ const firebaseConfig = {
     appId: "1:342274974916:web:71464bd4db14cb065f9591",
     measurementId: "G-RE6QS6HG9Q"
 };
+let app;
+let messaging;
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const database = getDatabase(app);
-const firestore = getFirestore(app);
+export const useFirebase = () => {
+    useEffect(() => {
+        app = initializeApp(firebaseConfig);
+        messaging = getMessaging(app);
+    }, []);
 
-export { auth, database, firestore };   
+    return { app, messaging };
+};
+
+export const getFirebaseAuth = () => {
+    const auth = getAuth(app);
+    return auth;
+};

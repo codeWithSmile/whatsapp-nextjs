@@ -6,18 +6,22 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "build": "tailwindcss build styles.css -o output.css"
   },
   "dependencies": {
     "@firebase/app": "^0.9.19",
     "@firebase/database": "^1.0.1",
     "@fortawesome/free-regular-svg-icons": "^6.4.2",
     "axios": "^1.5.1",
-    "firebase": "^10.4.0",
+    "bad-words": "^3.0.4",
+    "firebase": "^10.5.0",
     "next": "13.4.19",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-firebase-hooks": "^5.1.1",
     "react-icons": "^4.11.0",
-    "react-toastify": "^9.1.3"
+    "react-toastify": "^9.1.3",
+    "tailwindcss": "^3.3.5"
   }
 }

@@ -3,14 +3,19 @@ import React from 'react'
 // import { ref } from 'firebase/database';
 // import { database } from './firebase';
 import { useRouter } from 'next/router';
-import { auth } from './firebase';
 import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-
+import { auth } from './firebase';
 // import { signInWithEmailAndPassword } from "firebase/auth";
 import firebase from './firebase'
 
 function login() {
     const router = useRouter();
+    // const [user, setUser] = useState(null);
+
+    // useEffect(() => {
+    //     // Initialize Firebase auth when the component mounts
+    //     setUser(auth.currentUser); // Check if a user is already authenticated
+    // }, []);
     // const [uname, setUname] = useState('');
     // const [pass, setPass] = useState('');
 
@@ -23,11 +28,15 @@ function login() {
             const result = await signInWithPopup(auth, provider);
             // Handle the successful login result here if needed
             console.log('Google Sign-In Successful:', result);
+            // setUser(result.user);
             router.push('/sidebar');
         } catch (error) {
             console.error('Google Sign-In Error:', error);
         }
     };
+
+
+
 
     // useEffect(() => {
     //     if (conditionToRedirect) {

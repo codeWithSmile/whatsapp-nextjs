@@ -2,10 +2,13 @@
 import React, { useState, useEffect } from 'react';
 // import { ref, push, set, onValue } from 'firebase/database';
 import { FaEllipsisV, FaUsers, FaCommentDots, FaRegSmile, FaSearch } from 'react-icons/fa';
-import { auth } from './firebase';
-import { database } from './firebase';
+import { FaSignOutAlt } from 'react-icons/fa';
+import firebase from './firebase';
 import axios from 'axios';
 import Chat from './chat';
+
+const auth = firebase.auth();
+const firestore = firebase.firestore();
 
 function Sidebar() {
     const [contacts, setContacts] = useState([]);
@@ -31,12 +34,21 @@ function Sidebar() {
             };
 
             // Update the contacts state by adding the new contact
-            setContacts(prevContacts => [...prevContacts, newContact]);
-
+            if (!contacts.some(contact => contact.name === newContact.name)) {
+                setContacts(prevContacts => [...prevContacts, newContact]);
+            }
             setSearchQuery('');
         }
 
     }
+    const handleSignOut = async () => {
+        try {
+            // Sign out the current user
+            await auth.signOut();
+        } catch (error) {
+            console.error(error.message);
+        }
+    };
 
     const handleContactClick = (contactId) => {
         // Set the selected contact's unique identifier in the state
@@ -69,6 +81,9 @@ function Sidebar() {
                                 <FaCommentDots style={{ fontSize: '24px', marginRight: '10px' }} />
                                 <FaRegSmile style={{ fontSize: '24px', marginRight: '10px' }} />
                                 <FaEllipsisV style={{ fontSize: '24px', marginRight: '10px' }} />
+                                <button onClick={handleSignOut}>
+                                    <FaSignOutAlt style={{ fontSize: '24px', marginRight: '10px' }} />
+                                </button>
                             </span>
                         </div>
                     </div>
@@ -308,7 +323,7 @@ export default Sidebar;
 {/* {contacts.map((contact, index) => (
                             <div key={index} className='flexx'>
                                 <img src={contact.profilePicture} className='img' />
-                                <p>{contact.name}</p>
+                                <p>{contact.name}</p>   
                             </div>
                         ))}
                         <hr />

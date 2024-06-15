@@ -108,16 +108,21 @@
 // }
 
 import React from 'react'
-
-function index() {
+import Router, { useRouter } from 'next/router'
+function registration() {
+  const router = useRouter()
+  const handleRedirectToLogin = () => {
+    router.push('/login');
+  };
   return (
-    <div>
-      <h1>Next.js Firebase Authentication</h1>
+    <div className='index'>
+      <h1><center>Next.js Firebase Authentication</center></h1>
+      <button onClick={handleRedirectToLogin} className='redirect-to-login'>Go to Login Page</button>
     </div>
   )
 }
 
-export default index
+export default registration
 
 
 
